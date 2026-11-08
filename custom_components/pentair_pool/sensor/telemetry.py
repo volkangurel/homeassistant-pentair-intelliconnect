@@ -7,14 +7,22 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from custom_components.pentair_pool.const import (
+    FIELD_ECS2,
+    FIELD_ECS20,
     FIELD_HTD1,
     FIELD_ICS1,
     FIELD_ICS2,
+    FIELD_ICS3,
     FIELD_ICS9,
     FIELD_ICS11,
     FIELD_ICS12,
     FIELD_ICS13,
     FIELD_ICS15,
+    FIELD_IFS3,
+    FIELD_IFS4,
+    FIELD_IFS5,
+    FIELD_IFS6,
+    FIELD_IFS28,
     FIELD_RA4,
     FIELD_T0,
     FIELD_T1,
@@ -22,7 +30,16 @@ from custom_components.pentair_pool.const import (
 )
 from custom_components.pentair_pool.entity import PentairPoolEntity
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorEntityDescription, SensorStateClass
-from homeassistant.const import PERCENTAGE, UnitOfPower, UnitOfTemperature, UnitOfTime
+from homeassistant.const import (
+    PERCENTAGE,
+    REVOLUTIONS_PER_MINUTE,
+    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    EntityCategory,
+    UnitOfPower,
+    UnitOfTemperature,
+    UnitOfTime,
+    UnitOfVolumeFlowRate,
+)
 
 if TYPE_CHECKING:
     from custom_components.pentair_pool.coordinator import PentairPoolDataUpdateCoordinator
@@ -40,6 +57,14 @@ def _as_int(v: str) -> int | None:
         return int(v)
     except TypeError, ValueError:
         return None
+
+
+def _firmware_hundredths(v: str) -> str | None:
+    """Format a firmware version reported as an integer x100 (211 -> "2.11")."""
+    n = _as_int(v)
+    if n is None or n < 0:
+        return v or None
+    return f"{n // 100}.{n % 100:02d}"
 
 
 def _heater_mode_label(v: str) -> str:
@@ -169,6 +194,104 @@ SENSORS: tuple[tuple[str, PentairSensorDescription], ...] = (
             translation_key="salt_cell_model",
             has_entity_name=True,
             value_fn=lambda v: v,
+        ),
+    ),
+    # Raw IntelliChlor error code. Not decoded on purpose: Pentair doesn't
+    # document the bit meanings, so we expose the integer as-is.
+    (
+        FIELD_ICS3,
+        PentairSensorDescription(
+            key="salt_cell_error_code",
+            translation_key="salt_cell_error_code",
+            icon="mdi:alert-circle-outline",
+            entity_category=EntityCategory.DIAGNOSTIC,
+            has_entity_name=True,
+            value_fn=_as_int,
+        ),
+    ),
+    # --- IntelliFlo VSF variable-speed pump (RS485) ---------------------------
+    (
+        FIELD_IFS4,
+        PentairSensorDescription(
+            key="vsf_pump_speed",
+            translation_key="vsf_pump_speed",
+            icon="mdi:speedometer",
+            state_class=SensorStateClass.MEASUREMENT,
+            native_unit_of_measurement=REVOLUTIONS_PER_MINUTE,
+            has_entity_name=True,
+            value_fn=_as_int,
+        ),
+    ),
+    (
+        FIELD_IFS3,
+        PentairSensorDescription(
+            key="vsf_pump_power",
+            translation_key="vsf_pump_power",
+            device_class=SensorDeviceClass.POWER,
+            state_class=SensorStateClass.MEASUREMENT,
+            native_unit_of_measurement=UnitOfPower.WATT,
+            has_entity_name=True,
+            value_fn=_as_int,
+        ),
+    ),
+    (
+        FIELD_IFS6,
+        PentairSensorDescription(
+            key="vsf_pump_flow",
+            translation_key="vsf_pump_flow",
+            device_class=SensorDeviceClass.VOLUME_FLOW_RATE,
+            state_class=SensorStateClass.MEASUREMENT,
+            native_unit_of_measurement=UnitOfVolumeFlowRate.GALLONS_PER_MINUTE,
+            has_entity_name=True,
+            value_fn=_as_int,
+        ),
+    ),
+    (
+        FIELD_IFS28,
+        PentairSensorDescription(
+            key="vsf_pump_model",
+            translation_key="vsf_pump_model",
+            icon="mdi:pump",
+            entity_category=EntityCategory.DIAGNOSTIC,
+            has_entity_name=True,
+            value_fn=lambda v: v,
+        ),
+    ),
+    (
+        FIELD_IFS5,
+        PentairSensorDescription(
+            key="vsf_pump_firmware",
+            translation_key="vsf_pump_firmware",
+            icon="mdi:chip",
+            entity_category=EntityCategory.DIAGNOSTIC,
+            has_entity_name=True,
+            value_fn=_firmware_hundredths,
+        ),
+    ),
+    # --- Controller Wi-Fi link -----------------------------------------------
+    (
+        FIELD_ECS20,
+        PentairSensorDescription(
+            key="wifi_signal_level",
+            translation_key="wifi_signal_level",
+            icon="mdi:wifi",
+            state_class=SensorStateClass.MEASUREMENT,
+            entity_category=EntityCategory.DIAGNOSTIC,
+            has_entity_name=True,
+            value_fn=_as_int,
+        ),
+    ),
+    (
+        FIELD_ECS2,
+        PentairSensorDescription(
+            key="wifi_rssi",
+            translation_key="wifi_rssi",
+            device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+            state_class=SensorStateClass.MEASUREMENT,
+            native_unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+            entity_category=EntityCategory.DIAGNOSTIC,
+            has_entity_name=True,
+            value_fn=_as_int,
         ),
     ),
 )

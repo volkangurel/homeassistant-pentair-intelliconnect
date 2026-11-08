@@ -14,25 +14,35 @@ Reverse-engineering artifacts (mitmproxy captures, Frida hooks, decompiled APK, 
 
 Confirmed end-to-end on a live HA instance:
 
-| Entity                                     | Source field(s)             | Read                           | Write                                      |
-| ------------------------------------------ | --------------------------- | ------------------------------ | ------------------------------------------ |
-| `switch.<dev>_filter_pump`                 | `ra4` (read), `ra0` (write) | ✅ physical state              | ✅ override on/off                         |
-| `switch.<dev>_daily_schedule`              | `ra0`                       | ✅                             | ✅ enable/disable                          |
-| `climate.<dev>_heater`                     | `htd1`, `htd2`, `htd13`     | ✅                             | ✅ HVAC OFF/HEAT + setpoint (tenths of °F) |
-| `number.<dev>_chlorine_output`             | `icd1`                      | ✅                             | ✅ 0–100 % slider                          |
-| `time.<dev>_daily_schedule_start`          | `ra1` (UTC seconds → local) | ✅                             | ✅                                         |
-| `time.<dev>_daily_schedule_end`            | `ra2` (UTC seconds → local) | ✅                             | ✅                                         |
-| `sensor.<dev>_filter_pump_power`           | `ra4`                       | ✅ W                           | —                                          |
-| `sensor.<dev>_chlorine_output_actual`      | `ics1`                      | ✅ %                           | —                                          |
-| `sensor.<dev>_salt_level`                  | `ics2`                      | ✅ ppm                         | —                                          |
-| `sensor.<dev>_salt_cell_water_temperature` | `ics9`                      | ✅ °F                          | —                                          |
-| `sensor.<dev>_boost_remaining`             | `ics13`                     | ✅ s                           | —                                          |
-| `sensor.<dev>_salt_cell_lifetime_hours`    | `ics15`                     | ✅ h                           | —                                          |
-| `sensor.<dev>_heater_cooldown`             | `htd14`                     | ✅ s (likely config, not live) | —                                          |
-| `sensor.<dev>_salt_cell_firmware`          | `ics11`                     | ✅ string                      | —                                          |
-| `sensor.<dev>_salt_cell_model`             | `ics12`                     | ✅ string                      | —                                          |
-| `binary_sensor.<dev>_online`               | top-level `online`          | ✅                             | —                                          |
-| `binary_sensor.<dev>_alarm`                | top-level `alarm`           | ✅                             | —                                          |
+| Entity                                     | Source field(s)                        | Read                           | Write                                      |
+| ------------------------------------------ | -------------------------------------- | ------------------------------ | ------------------------------------------ |
+| `switch.<dev>_filter_pump`                 | `ra4` (read), `ra0` (write)            | ✅ physical state              | ✅ override on/off                         |
+| `switch.<dev>_daily_schedule`              | `ra0`                                  | ✅                             | ✅ enable/disable                          |
+| `climate.<dev>_heater`                     | `htd1`, `htd2`, `htd13`                | ✅                             | ✅ HVAC OFF/HEAT + setpoint (tenths of °F) |
+| `number.<dev>_chlorine_output`             | `icd1`                                 | ✅                             | ✅ 0–100 % slider                          |
+| `time.<dev>_daily_schedule_start`          | `ra1` (UTC seconds → local)            | ✅                             | ✅                                         |
+| `time.<dev>_daily_schedule_end`            | `ra2` (UTC seconds → local)            | ✅                             | ✅                                         |
+| `sensor.<dev>_filter_pump_power`           | `ra4`                                  | ✅ W                           | —                                          |
+| `sensor.<dev>_chlorine_output_actual`      | `ics1`                                 | ✅ %                           | —                                          |
+| `sensor.<dev>_salt_level`                  | `ics2`                                 | ✅ ppm                         | —                                          |
+| `sensor.<dev>_salt_cell_water_temperature` | `ics9`                                 | ✅ °F                          | —                                          |
+| `sensor.<dev>_boost_remaining`             | `ics13`                                | ✅ s                           | —                                          |
+| `sensor.<dev>_salt_cell_lifetime_hours`    | `ics15`                                | ✅ h                           | —                                          |
+| `sensor.<dev>_heater_cooldown`             | `htd14`                                | ✅ s (likely config, not live) | —                                          |
+| `sensor.<dev>_salt_cell_firmware`          | `ics11`                                | ✅ string                      | —                                          |
+| `sensor.<dev>_salt_cell_model`             | `ics12`                                | ✅ string                      | —                                          |
+| `binary_sensor.<dev>_online`               | top-level `online`                     | ✅                             | —                                          |
+| `binary_sensor.<dev>_alarm`                | top-level `alarm`                      | ✅                             | —                                          |
+| `sensor.<dev>_vsf_pump_speed`              | `ifs4`                                 | ✅ RPM                         | —                                          |
+| `sensor.<dev>_vsf_pump_power`              | `ifs3`                                 | ✅ W                           | —                                          |
+| `sensor.<dev>_vsf_pump_flow`               | `ifs6`                                 | ✅ gal/min                     | —                                          |
+| `sensor.<dev>_vsf_pump_model`              | `ifs28`                                | ✅ string                      | —                                          |
+| `sensor.<dev>_vsf_pump_firmware`           | `ifs5`                                 | ✅ `211` → `2.11`              | —                                          |
+| `binary_sensor.<dev>_vsf_pump_running`     | `ifs4` > 0 (attr: raw `ifs1`)          | ✅                             | —                                          |
+| `binary_sensor.<dev>_vsf_pump_alarm`       | `ifs18` != 0 (attr: raw code, `ifs30`) | ✅                             | —                                          |
+| `sensor.<dev>_salt_cell_error_code`        | `ics3`                                 | ✅ raw integer                 | —                                          |
+| `sensor.<dev>_wi_fi_signal_level`          | `ecs20`                                | ✅ 0–5                         | —                                          |
+| `sensor.<dev>_wi_fi_rssi`                  | `ecs2`                                 | ✅ dBm                         | —                                          |
 
 Round-trip write verified for: filter pump on/off, Daily Schedule on/off, chlorine setpoint up/down, heater HVAC mode + setpoint, schedule start/end time edits.
 
@@ -57,7 +67,7 @@ Round-trip write verified for: filter pump on/off, Daily Schedule on/off, chlori
 
 7. **Non-PIF0 device types** (`IF31` IntelliFlo, `ICT1` IntelliCenter, `WQM1` ChemCheck, etc.) — field codes unknown. The auth/REST/WS plumbing should work for them, but no entities will spawn because the platform gating checks for PIF0-specific fields.
 
-8. **`binary_sensor.intelliconnect_alarm`** has been reading `on` throughout the session. Worth checking what alarm code is being raised (likely in `ics3` for the salt cell). Not yet decoded.
+8. **`binary_sensor.intelliconnect_alarm`** has been reading `on` throughout the session. Worth checking what alarm code is being raised (likely in `ics3` for the salt cell). The raw `ics3` value is now exposed as `sensor.<dev>_salt_cell_error_code` (one controller observed `128`); the bit meanings are still not decoded.
 
 9. **Water-temperature sensor** (separate from salt cell temp) — present in the `devices` map under the "Water Temperature" component name, but the underlying field code isn't yet surfaced as a sensor. Same for "Air Temperature".
 

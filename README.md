@@ -17,20 +17,25 @@ The integration is reverse-engineered from the official Pentair Home mobile app;
 
 The integration is configured per Pentair account and surfaces one Home Assistant device per IntelliConnect controller on that account. Entities are only created if the controller actually reports the underlying field, so accessories you don't own (for example, a salt cell on a chlorine-tab pool) won't produce orphan entities.
 
-| Platform        | Entities                                                                                                                                                                                   |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `binary_sensor` | **Online** (connectivity), **Alarm** (problem flag), **Filter pump running** (true while Relay 1 draws power)                                                                              |
-| `climate`       | **Heater** — HVAC entity wrapping the pool heater. `heat` / `off` modes, setpoint in °F, `current_temperature` from the water-temp probe, `hvac_action` reports `heating` / `idle` / `off` |
-| `number`        | **Chlorine output** — IntelliChlor salt-cell output setpoint (0–100 %, slider)                                                                                                             |
-| `sensor`        | **Water temperature**, **Air temperature**, **Heater mode** (Off / Auto idle / Heating / …), **Heater cooldown** (live 1 Hz countdown), **Filter pump power** (W)                          |
-| `sensor` (salt) | **Chlorine actual** (%), **Salt** (ppm), **Salt cell temperature**, **Salt cell hours**, **Boost remaining** (s), **Salt cell model**, **Salt cell firmware**                              |
-| `switch`        | **Filter pump** (manual override, preserves the schedule bit), **Daily schedule** (enable/disable the recurring schedule, preserves the pump on/off bit)                                   |
-| `time`          | **Daily schedule start**, **Daily schedule stop** (stored as UTC seconds-of-day on the controller, displayed in your Home Assistant timezone)                                              |
+| Platform                   | Entities                                                                                                                                                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `binary_sensor`            | **Online** (connectivity), **Alarm** (problem flag), **Filter pump running** (true while Relay 1 draws power)                                                                                                             |
+| `climate`                  | **Heater** — HVAC entity wrapping the pool heater. `heat` / `off` modes, setpoint in °F, `current_temperature` from the water-temp probe, `hvac_action` reports `heating` / `idle` / `off`                                |
+| `number`                   | **Chlorine output** — IntelliChlor salt-cell output setpoint (0–100 %, slider)                                                                                                                                            |
+| `sensor`                   | **Water temperature**, **Air temperature**, **Heater mode** (Off / Auto idle / Heating / …), **Heater cooldown** (live 1 Hz countdown), **Filter pump power** (W)                                                         |
+| `sensor` (salt)            | **Chlorine actual** (%), **Salt** (ppm), **Salt cell temperature**, **Salt cell hours**, **Boost remaining** (s), **Salt cell model**, **Salt cell firmware**                                                             |
+| `binary_sensor` (VSF pump) | **VSF pump running** (true while the IntelliFlo VSF reports speed > 0 RPM; raw `Running_Stopped` as attribute), **VSF pump alarm** (problem flag, on when the pump alarm code is non-zero; raw `alarm_code` as attribute) |
+| `sensor` (VSF pump)        | **VSF pump speed** (RPM), **VSF pump power** (W), **VSF pump flow** (gal/min); diagnostic: **VSF pump model**, **VSF pump firmware** (e.g. `2.11`)                                                                        |
+| `sensor` (diagnostic)      | **Salt cell error code** (raw IntelliChlor error value), **Wi-Fi signal level** (0–5 bars), **Wi-Fi RSSI** (dBm)                                                                                                          |
+| `switch`                   | **Filter pump** (manual override, preserves the schedule bit), **Daily schedule** (enable/disable the recurring schedule, preserves the pump on/off bit)                                                                  |
+| `time`                     | **Daily schedule start**, **Daily schedule stop** (stored as UTC seconds-of-day on the controller, displayed in your Home Assistant timezone)                                                                             |
 
 ### Notable behaviors
 
 - **Filter pump switch `is_on` follows reality, not intent.** It reads ON whenever the pump is actually circulating water — manual override, scheduled run, or heater cooldown extending the run — matching what the Pentair app shows. When you toggle the switch, an optimistic state is held until the controller's reported wattage agrees. Tap OFF during heater cooldown and the switch stays OFF for the whole cooldown window; the pump physically stops a few minutes later when the firmware releases the relay.
 - **Heater cooldown sensor ticks every second.** The Pentair Cloud only pushes the cooldown counter every 10–30 s; the entity re-anchors on each push and ticks locally in between so dashboards see a smooth countdown. It snaps to 0 the moment the pump reports 0 W.
+- **IntelliFlo VSF pump entities come from the RS485 bus, not Relay 1.** If your variable-speed pump is wired to the controller's RS485 port, its speed, power and flow are read from the pump drive's own telemetry (`ifs*` fields). On such setups Relay 1 may drive something else (for example a heater), so **Filter pump running** / **Filter pump power** describe the relay, while the **VSF pump** entities describe the pump itself. The VSF entities are only created when the controller reports those fields.
+- **Error and alarm codes are raw, not decoded.** **Salt cell error code** and the **VSF pump alarm** `alarm_code` attribute are the integers Pentair Cloud reports. Pentair doesn't document what the individual values or bits mean, so the integration doesn't guess; check the Pentair Home app for the human-readable alert text.
 - **Schedule times are timezone-aware.** Writes always go out as UTC seconds-of-day (what the firmware expects) using Home Assistant's configured timezone for the conversion.
 
 ## Service actions
@@ -97,6 +102,7 @@ The Pentair heater has a two-step state machine: writing `heat` puts the firmwar
 
 - Tested against IntelliConnect controllers (PIF0 device type) on US accounts (Cognito `us-west-2`)
 - Heater, IntelliChlor IC-40 salt cell, and Daily Schedule are wired up; pumps controlled directly via Relay 1
+- IntelliFlo VSF variable-speed pumps on the RS485 bus are read-only (speed, power, flow, running, alarm); speed control is not implemented
 - EU Cognito pool constants are present in the source but have not yet been exercised — open an issue if you're on a EU account and willing to test
 
 ## Contributing

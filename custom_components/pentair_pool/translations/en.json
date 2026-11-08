@@ -64,12 +64,22 @@
       "boost_remaining": { "name": "Boost remaining" },
       "salt_cell_hours": { "name": "Salt cell lifetime hours" },
       "salt_cell_firmware": { "name": "Salt cell firmware" },
-      "salt_cell_model": { "name": "Salt cell model" }
+      "salt_cell_model": { "name": "Salt cell model" },
+      "salt_cell_error_code": { "name": "Salt cell error code" },
+      "vsf_pump_speed": { "name": "VSF pump speed" },
+      "vsf_pump_power": { "name": "VSF pump power" },
+      "vsf_pump_flow": { "name": "VSF pump flow" },
+      "vsf_pump_model": { "name": "VSF pump model" },
+      "vsf_pump_firmware": { "name": "VSF pump firmware" },
+      "wifi_signal_level": { "name": "Wi-Fi signal level" },
+      "wifi_rssi": { "name": "Wi-Fi RSSI" }
     },
     "binary_sensor": {
       "online": { "name": "Online" },
       "alarm": { "name": "Alarm" },
-      "filter_pump_running": { "name": "Filter pump running" }
+      "filter_pump_running": { "name": "Filter pump running" },
+      "vsf_pump_running": { "name": "VSF pump running" },
+      "vsf_pump_alarm": { "name": "VSF pump alarm" }
     },
     "time": {
       "schedule_start": { "name": "Daily schedule start" },

@@ -76,6 +76,25 @@ FIELD_ICS15 = "ics15"  # Chlor_Operation_Hours (RO)
 FIELD_T0 = "t0"  # Current_Water_Temp (RO, degF integer)
 FIELD_T1 = "t1"  # FP_Outside_Temp (RO, degF integer, S16 so signed)
 
+# IntelliFlo VSF variable-speed pump on the controller's RS485 bus (RO).
+# Present only when the controller reports a VSF pump (device_info lists it
+# under "IntelliFlo pumps"). Values are raw integers/strings from the cloud.
+FIELD_IFS1 = "ifs1"  # Running_Stopped (0-10; observed 10 while running, semantics undocumented)
+FIELD_IFS2 = "ifs2"  # Active_Menu (0-15)
+FIELD_IFS3 = "ifs3"  # Actual_Power (U16, watts)
+FIELD_IFS4 = "ifs4"  # Actual_Speed_Status (U16, RPM)
+FIELD_IFS5 = "ifs5"  # VFD_Software (firmware x100, e.g. 211 -> 2.11)
+FIELD_IFS6 = "ifs6"  # Actual_Flow_VSF (U16, gallons per minute)
+FIELD_IFS18 = "ifs18"  # Alarm (U32 bitfield/code; 0 = no alarm; not decoded)
+FIELD_IFS27 = "ifs27"  # Duration (minutes, 0-1440)
+FIELD_IFS28 = "ifs28"  # VFD_Model (string, e.g. "Intelli VSF")
+FIELD_IFS29 = "ifs29"  # External_Control (0-32)
+FIELD_IFS30 = "ifs30"  # temp_alarm_higher_than_150
+
+# Controller Wi-Fi link (RO)
+FIELD_ECS2 = "ecs2"  # rfrssi (dBm)
+FIELD_ECS20 = "ecs20"  # WiFiLevel (0-5 bars)
+
 # --- ra0 state values (filter pump state machine) ----------------------------
 RA0_OFF_NO_SCHEDULE = "0"
 RA0_ON_NO_SCHEDULE = "1"
