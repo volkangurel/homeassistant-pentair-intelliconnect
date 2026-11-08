@@ -107,6 +107,14 @@ The Pentair heater has a two-step state machine: writing `heat` puts the firmwar
 - IntelliFlo VSF variable-speed pumps on the RS485 bus expose live speed, power, flow, running and alarm, plus writable program and preset set speeds, preset operating modes (Manual/Timer/Schedule), local start/stop times and egg-timer durations
 - EU Cognito pool constants are present in the source but have not yet been exercised — open an issue if you're on a EU account and willing to test
 
+The read-only **VSF active speed** sensor decodes `ifs2` (Active_Menu):
+0 = Stopped, 1–4 = Speed 1–4. Other codes show Other and retain their raw
+`active_menu` attribute, rather than highlighting an unrelated preset.
+`minutes_left` comes from `ifs27`. An explicit stopped status (`ifs1 = 4`)
+overrides a stale menu and clears minutes left. Speed 1 (`ifs2 = 1`) has been
+verified live at its configured 2470 RPM; other preset codes follow the menu
+numbering and are covered by mocked tests, not additional live pump writes.
+
 ### IntelliFlo VSF preset controls
 
 For each reported Speed 1–4, the integration adds a mode select, start/stop
