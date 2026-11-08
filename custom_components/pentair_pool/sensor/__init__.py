@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from custom_components.pentair_pool.const import FIELD_RAS0, PARALLEL_UPDATES as PARALLEL_UPDATES
+from custom_components.pentair_pool.const import FIELD_IFS2, FIELD_RAS0, PARALLEL_UPDATES as PARALLEL_UPDATES
 
 from .cooldown import PentairPoolCooldownCountdown
 from .telemetry import SENSORS, PentairPoolFieldSensor
+from .vsf_active import PentairPoolVsfActiveSpeed
 
 if TYPE_CHECKING:
     from custom_components.pentair_pool.data import PentairPoolConfigEntry
@@ -34,6 +35,8 @@ async def async_setup_entry(
                 entities.append(
                     PentairPoolFieldSensor(coordinator, device_id, field_code, desc),
                 )
+        if FIELD_IFS2 in fields:
+            entities.append(PentairPoolVsfActiveSpeed(coordinator, device_id))
         if FIELD_RAS0 in fields:
             entities.append(PentairPoolCooldownCountdown(coordinator, device_id))
     async_add_entities(entities)
