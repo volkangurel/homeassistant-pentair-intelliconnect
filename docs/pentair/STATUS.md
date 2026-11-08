@@ -43,6 +43,8 @@ Confirmed end-to-end on a live HA instance:
 | `sensor.<dev>_salt_cell_error_code`        | `ics3`                                 | ✅ raw integer                 | —                                          |
 | `sensor.<dev>_wi_fi_signal_level`          | `ecs20`                                | ✅ 0–5                         | —                                          |
 | `sensor.<dev>_wi_fi_rssi`                  | `ecs2`                                 | ✅ dBm                         | —                                          |
+| `number.<dev>_vsf_program_1..4_speed`      | `ifd29`–`ifd32`                        | ✅ RPM 450–3450                | ⏳ untested on hardware                    |
+| `number.<dev>_vsf_speed_1..4_preset`       | `ifd4`–`ifd7`                          | ✅ RPM 450–3450                | ⏳ untested on hardware                    |
 
 Round-trip write verified for: filter pump on/off, Daily Schedule on/off, chlorine setpoint up/down, heater HVAC mode + setpoint, schedule start/end time edits.
 
