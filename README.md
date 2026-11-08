@@ -22,6 +22,7 @@ The integration is configured per Pentair account and surfaces one Home Assistan
 | `binary_sensor`            | **Online** (connectivity), **Alarm** (problem flag), **Filter pump running** (true while Relay 1 draws power)                                                                                                             |
 | `climate`                  | **Heater** — HVAC entity wrapping the pool heater. `heat` / `off` modes, setpoint in °F, `current_temperature` from the water-temp probe, `hvac_action` reports `heating` / `idle` / `off`                                |
 | `number`                   | **Chlorine output** — IntelliChlor salt-cell output setpoint (0–100 %, slider)                                                                                                                                            |
+| `number` (VSF pump)        | **VSF program 1–4 speed** and **VSF speed 1–4 preset** — the IntelliFlo VSF's configured set speeds (450–3450 RPM, step 5)                                                                                                |
 | `sensor`                   | **Water temperature**, **Air temperature**, **Heater mode** (Off / Auto idle / Heating / …), **Heater cooldown** (live 1 Hz countdown), **Filter pump power** (W)                                                         |
 | `sensor` (salt)            | **Chlorine actual** (%), **Salt** (ppm), **Salt cell temperature**, **Salt cell hours**, **Boost remaining** (s), **Salt cell model**, **Salt cell firmware**                                                             |
 | `binary_sensor` (VSF pump) | **VSF pump running** (true while the IntelliFlo VSF reports speed > 0 RPM; raw `Running_Stopped` as attribute), **VSF pump alarm** (problem flag, on when the pump alarm code is non-zero; raw `alarm_code` as attribute) |
@@ -102,7 +103,7 @@ The Pentair heater has a two-step state machine: writing `heat` puts the firmwar
 
 - Tested against IntelliConnect controllers (PIF0 device type) on US accounts (Cognito `us-west-2`)
 - Heater, IntelliChlor IC-40 salt cell, and Daily Schedule are wired up; pumps controlled directly via Relay 1
-- IntelliFlo VSF variable-speed pumps on the RS485 bus are read-only (speed, power, flow, running, alarm); speed control is not implemented
+- IntelliFlo VSF variable-speed pumps on the RS485 bus expose live speed, power, flow, running and alarm, plus writable program and preset set speeds; start/stop times, operating modes and egg timers are not implemented
 - EU Cognito pool constants are present in the source but have not yet been exercised — open an issue if you're on a EU account and willing to test
 
 ## Contributing

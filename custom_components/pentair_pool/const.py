@@ -91,6 +91,19 @@ FIELD_IFS28 = "ifs28"  # VFD_Model (string, e.g. "Intelli VSF")
 FIELD_IFS29 = "ifs29"  # External_Control (0-32)
 FIELD_IFS30 = "ifs30"  # temp_alarm_higher_than_150
 
+# IntelliFlo VSF on RS485 -- pump config (RW). Speeds in RPM.
+FIELD_IFD4 = "ifd4"  # Speed1_Set_Speed
+FIELD_IFD5 = "ifd5"  # Speed2_Set_Speed
+FIELD_IFD6 = "ifd6"  # Speed3_Set_Speed
+FIELD_IFD7 = "ifd7"  # Speed4_Set_Speed
+FIELD_IFD29 = "ifd29"  # Program1_Set_Speed
+FIELD_IFD30 = "ifd30"  # Program2_Set_Speed
+FIELD_IFD31 = "ifd31"  # Program3_Set_Speed
+FIELD_IFD32 = "ifd32"  # Program4_Set_Speed
+VSF_MIN_RPM = 450
+VSF_MAX_RPM = 3450
+VSF_RPM_STEP = 5
+
 # Controller Wi-Fi link (RO)
 FIELD_ECS2 = "ecs2"  # rfrssi (dBm)
 FIELD_ECS20 = "ecs20"  # WiFiLevel (0-5 bars)

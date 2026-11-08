@@ -50,7 +50,15 @@
       "heater": { "name": "Heater" }
     },
     "number": {
-      "chlorine_setpoint": { "name": "Chlorine output" }
+      "chlorine_setpoint": { "name": "Chlorine output" },
+      "vsf_program_1_speed": { "name": "VSF program 1 speed" },
+      "vsf_program_2_speed": { "name": "VSF program 2 speed" },
+      "vsf_program_3_speed": { "name": "VSF program 3 speed" },
+      "vsf_program_4_speed": { "name": "VSF program 4 speed" },
+      "vsf_speed_1_preset": { "name": "VSF speed 1 preset" },
+      "vsf_speed_2_preset": { "name": "VSF speed 2 preset" },
+      "vsf_speed_3_preset": { "name": "VSF speed 3 preset" },
+      "vsf_speed_4_preset": { "name": "VSF speed 4 preset" }
     },
     "sensor": {
       "water_temperature": { "name": "Water temperature" },
