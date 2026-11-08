@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from custom_components.pentair_pool.const import FIELD_ICD1, PARALLEL_UPDATES as PARALLEL_UPDATES
+from custom_components.pentair_pool.const import FIELD_ICD1, PARALLEL_UPDATES as PARALLEL_UPDATES, VSF_PRESET_FIELDS
 
 from .chlorine_setpoint import PentairPoolChlorineSetpoint
 from .vsf_speed import VSF_SPEED_NUMBERS, PentairPoolVsfSpeed
+from .vsf_timer import PentairPoolVsfTimer
 
 if TYPE_CHECKING:
     from custom_components.pentair_pool.data import PentairPoolConfigEntry
@@ -32,5 +33,10 @@ async def async_setup_entry(
             PentairPoolVsfSpeed(coordinator, device_id, field, desc, name)
             for field, desc, name in VSF_SPEED_NUMBERS
             if field in fields
+        )
+        entities.extend(
+            PentairPoolVsfTimer(coordinator, device_id, speed, duration)
+            for speed, _mode, _start, _stop, duration in VSF_PRESET_FIELDS
+            if duration in fields
         )
     async_add_entities(entities)

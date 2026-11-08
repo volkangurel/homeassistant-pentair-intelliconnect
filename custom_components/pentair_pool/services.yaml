@@ -2,3 +2,20 @@ reload_data:
   name: Reload data
   description: Force an immediate REST poll of the Pentair Cloud API.
   fields: {}
+
+set_fields:
+  name: Set raw fields (advanced)
+  description: Write raw Pentair cloud fields, for example {"ifd3": "1"}. Advanced and unvalidated; can change real equipment.
+  fields:
+    fields:
+      name: Fields
+      description: Mapping of Pentair field id to value.
+      required: true
+      selector:
+        object:
+    device:
+      name: Device
+      description: Pentair device id; defaults to the device that reports these fields.
+      required: false
+      selector:
+        text:
