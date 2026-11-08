@@ -45,6 +45,7 @@ Confirmed end-to-end on a live HA instance:
 | `sensor.<dev>_wi_fi_rssi`                  | `ecs2`                                 | ✅ dBm                         | —                                          |
 | `number.<dev>_relay_1_pump_speed`         | `ra7` Relay1_FD_RPM                    | ✅ RPM 450–3450                | ⏳ untested on hardware                    |
 | `number.<dev>_heater_pump_speed`          | `htd3` Heater_FD_RPM                   | ✅ RPM 450–3450                | ⏳ untested on hardware                    |
+| `text.<dev>_vsf_program_1..4_name`         | `p5`–`p8` (cloud STR)                  | ✅ 1–20 chars                  | ⏳ untested on hardware                    |
 | `number.<dev>_vsf_program_1..4_speed`      | `ifd29`–`ifd32`                        | ✅ RPM 450–3450                | ⏳ untested on hardware                    |
 | `number.<dev>_vsf_speed_1..4_preset`       | `ifd4`–`ifd7`                          | ✅ RPM 450–3450                | ⏳ untested on hardware                    |
 

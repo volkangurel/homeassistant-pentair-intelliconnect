@@ -91,6 +91,12 @@
       "vsf_pump_running": { "name": "VSF pump running" },
       "vsf_pump_alarm": { "name": "VSF pump alarm" }
     },
+    "text": {
+      "vsf_program_1_name": { "name": "VSF program 1 name" },
+      "vsf_program_2_name": { "name": "VSF program 2 name" },
+      "vsf_program_3_name": { "name": "VSF program 3 name" },
+      "vsf_program_4_name": { "name": "VSF program 4 name" }
+    },
     "time": {
       "schedule_start": { "name": "Daily schedule start" },
       "schedule_end": { "name": "Daily schedule stop" }
