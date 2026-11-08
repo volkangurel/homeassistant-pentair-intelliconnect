@@ -102,6 +102,12 @@ FIELD_IFD29 = "ifd29"  # Program1_Set_Speed
 FIELD_IFD30 = "ifd30"  # Program2_Set_Speed
 FIELD_IFD31 = "ifd31"  # Program3_Set_Speed
 FIELD_IFD32 = "ifd32"  # Program4_Set_Speed
+# VSF program display names (cloud STR fields, editable in the Pentair Home app)
+FIELD_P5 = "p5"  # Program 1 name
+FIELD_P6 = "p6"  # Program 2 name
+FIELD_P7 = "p7"  # Program 3 name
+FIELD_P8 = "p8"  # Program 4 name
+PROGRAM_NAME_MAX_LEN = 20
 VSF_MIN_RPM = 450
 VSF_MAX_RPM = 3450
 VSF_RPM_STEP = 5
