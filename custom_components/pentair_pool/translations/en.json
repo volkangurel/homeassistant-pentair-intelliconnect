@@ -51,6 +51,8 @@
     },
     "number": {
       "chlorine_setpoint": { "name": "Chlorine output" },
+      "relay_1_pump_speed": { "name": "Relay 1 pump speed" },
+      "heater_pump_speed": { "name": "Heater pump speed" },
       "vsf_program_1_speed": { "name": "VSF program 1 speed" },
       "vsf_program_2_speed": { "name": "VSF program 2 speed" },
       "vsf_program_3_speed": { "name": "VSF program 3 speed" },
