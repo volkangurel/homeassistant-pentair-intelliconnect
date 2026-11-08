@@ -145,3 +145,12 @@ HTD1_LABELS = {
 
 # --- Salt cell boost ---------------------------------------------------------
 BOOST_RPM = "450"
+
+# VSF presets: (speed, mode, start, stop, egg-timer duration).
+# Starts and stops are separate blocks of LOCAL minutes, not relay UTC seconds.
+VSF_PRESET_FIELDS: tuple[tuple[int, str, str, str, str], ...] = (
+    (1, "ifd0", "ifd8", "ifd12", "ifd16"),
+    (2, "ifd1", "ifd9", "ifd13", "ifd17"),
+    (3, "ifd2", "ifd10", "ifd14", "ifd18"),
+    (4, "ifd3", "ifd11", "ifd15", "ifd19"),
+)

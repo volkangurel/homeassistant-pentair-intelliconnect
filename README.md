@@ -104,8 +104,26 @@ The Pentair heater has a two-step state machine: writing `heat` puts the firmwar
 
 - Tested against IntelliConnect controllers (PIF0 device type) on US accounts (Cognito `us-west-2`)
 - Heater, IntelliChlor IC-40 salt cell, and Daily Schedule are wired up; pumps controlled directly via Relay 1
-- IntelliFlo VSF variable-speed pumps on the RS485 bus expose live speed, power, flow, running and alarm, plus writable program and preset set speeds; start/stop times, operating modes and egg timers are not implemented
+- IntelliFlo VSF variable-speed pumps on the RS485 bus expose live speed, power, flow, running and alarm, plus writable program and preset set speeds, preset operating modes (Manual/Timer/Schedule), local start/stop times and egg-timer durations
 - EU Cognito pool constants are present in the source but have not yet been exercised — open an issue if you're on a EU account and willing to test
+
+### IntelliFlo VSF preset controls
+
+For each reported Speed 1–4, the integration adds a mode select, start/stop
+local-time entities, and an egg-timer duration number. Times have minute
+precision and do **not** use the relay schedule's UTC-seconds conversion.
+Timer limits come from the controller (normally -1 to 600 minutes); -1 is a
+raw firmware sentinel, not a documented unlimited-run setting.
+
+Changing these settings can affect a running pump, but these entities do not
+send the app's one-time Start/Stop commands. Schedule-based start/stop behavior
+must be tested separately with the pump enabled and no competing schedules or
+external demands. Loading the integration makes no field writes.
+
+The advanced `pentair_pool.set_fields` action accepts a mapping of raw field
+codes to values and an optional Pentair `device` id. Without a device it uses
+the first controller reporting every requested field. This bypasses the entity
+range checks and can change real equipment; prefer the typed entities.
 
 ## Contributing
 
