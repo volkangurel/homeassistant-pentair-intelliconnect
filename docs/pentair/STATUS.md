@@ -43,10 +43,12 @@ Confirmed end-to-end on a live HA instance:
 | `sensor.<dev>_salt_cell_error_code`        | `ics3`                                 | ✅ raw integer                 | —                                          |
 | `sensor.<dev>_wi_fi_signal_level`          | `ecs20`                                | ✅ 0–5                         | —                                          |
 | `sensor.<dev>_wi_fi_rssi`                  | `ecs2`                                 | ✅ dBm                         | —                                          |
+| `number.<dev>_relay_1_pump_speed`         | `ra7` Relay1_FD_RPM                    | ✅ RPM 450–3450                | ⏳ untested on hardware                    |
+| `number.<dev>_heater_pump_speed`          | `htd3` Heater_FD_RPM                   | ✅ RPM 450–3450                | ⏳ untested on hardware                    |
 | `number.<dev>_vsf_program_1..4_speed`      | `ifd29`–`ifd32`                        | ✅ RPM 450–3450                | ⏳ untested on hardware                    |
 | `number.<dev>_vsf_speed_1..4_preset`       | `ifd4`–`ifd7`                          | ✅ RPM 450–3450                | ⏳ untested on hardware                    |
 
-Round-trip write verified for: filter pump on/off, Daily Schedule on/off, chlorine setpoint up/down, heater HVAC mode + setpoint, schedule start/end time edits.
+Round-trip write verified for: VSF speed 1 preset (`ifd4`, confirmed in the Pentair Home app), filter pump on/off, Daily Schedule on/off, chlorine setpoint up/down, heater HVAC mode + setpoint, schedule start/end time edits.
 
 ### Known issues / pending
 
@@ -61,7 +63,7 @@ Round-trip write verified for: filter pump on/off, Daily Schedule on/off, chlori
 
 3. **Pump egg-timer (`p1`)** not exposed. The pump detail page in the app has a Timer card that we haven't tested. By symmetry with the salt-cell boost, expect the same write-once-then-watch-countdown pattern but with field `p1`. Untested.
 
-4. **Heater egg-timer & schedule** not exposed. Heater detail page UI exists but was empty (no times set on this account). Likely `p2` (egg-timer) and `htd3`/`htd4` (schedule start/end UTC seconds) by symmetry with the pump. Unverified.
+4. **Heater egg-timer & schedule** not exposed. Heater detail page UI exists but was empty (no times set on this account). Likely `p2` (egg-timer) and `htd4`/`htd5` (schedule start/end UTC seconds) by symmetry with the pump. Unverified. (`htd3` is `Heater_FD_RPM`, the VSF speed while heating.)
 
 5. **Token refresh** is implemented but unverified live. The test session has been < 1 hour each run so the refresh path (`REFRESH_TOKEN_AUTH`) hasn't been exercised. Leave HA running > 1 h to validate.
 

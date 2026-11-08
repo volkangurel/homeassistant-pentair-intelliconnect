@@ -42,6 +42,8 @@ VSF_FIELDS: dict[str, dict[str, str]] = {
     "ifd30": _field("1500", "Program2_Set_Speed"),
     "ifd31": _field("2350", "Program3_Set_Speed"),
     "ifd32": _field("3110", "Program4_Set_Speed"),
+    "ra7": _field("2405", "Relay1_FD_RPM"),
+    "htd3": _field("2460", "Heater_FD_RPM"),
     "ics3": _field("128", "Chlor_Error_Message"),
     "ecs2": _field("-78", "rfrssi"),
     "ecs20": _field("1", "WiFiLevel"),

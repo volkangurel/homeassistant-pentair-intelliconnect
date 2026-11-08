@@ -13,6 +13,8 @@ from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.core import HomeAssistant
 
 SPEED_NUMBERS = {
+    "number.intelliconnect_relay_1_pump_speed": ("ra7", "2405"),
+    "number.intelliconnect_heater_pump_speed": ("htd3", "2460"),
     "number.intelliconnect_vsf_program_1_speed": ("ifd29", "2405"),
     "number.intelliconnect_vsf_program_2_speed": ("ifd30", "1500"),
     "number.intelliconnect_vsf_program_3_speed": ("ifd31", "2350"),
@@ -67,6 +69,23 @@ async def test_set_vsf_speed_writes_field(hass: HomeAssistant, config_entry: Moc
         await hass.async_block_till_done()
     put.assert_awaited_once_with(device_id, {"ifd29": 2410})
     assert float(hass.states.get("number.intelliconnect_vsf_program_1_speed").state) == 2410
+
+
+@pytest.mark.integration
+@pytest.mark.usefixtures("mock_pentair")
+async def test_set_relay_1_pump_speed_writes_ra7(
+    hass: HomeAssistant, config_entry: MockConfigEntry, device_id: str
+) -> None:
+    await _setup(hass, config_entry)
+    with patch("custom_components.pentair_pool.api.PentairPoolApiClient.async_set_fields", return_value=None) as put:
+        await hass.services.async_call(
+            NUMBER_DOMAIN,
+            SERVICE_SET_VALUE,
+            {ATTR_ENTITY_ID: "number.intelliconnect_relay_1_pump_speed", ATTR_VALUE: 2412},
+            blocking=True,
+        )
+        await hass.async_block_till_done()
+    put.assert_awaited_once_with(device_id, {"ra7": 2410})
 
 
 @pytest.mark.integration

@@ -54,10 +54,12 @@ FIELD_RA1 = "ra1"  # Relay1_Start_Time (UTC seconds-of-day)
 FIELD_RA2 = "ra2"  # Relay1_End_Time
 FIELD_RA3 = "ra3"  # Relay1_Timer (configured timer duration, seconds)
 FIELD_RA4 = "ra4"  # Relay1_Power (watts, RO)
+FIELD_RA7 = "ra7"  # Relay1_FD_RPM (VSF speed while Relay 1 is on, RPM)
 FIELD_RAS0 = "ras0"  # Relay1_Timer_Status (live pump-stop countdown, RO seconds)
 FIELD_P1 = "p1"  # Relay1_Egg_Timer
 FIELD_HTD1 = "htd1"  # Heater_Mode
 FIELD_HTD2 = "htd2"  # Heater_SetPoint (tenths of degF)
+FIELD_HTD3 = "htd3"  # Heater_FD_RPM (VSF speed while the heater fires, RPM)
 FIELD_HTD13 = "htd13"  # Heater aux flag (written with htd1=0 on OFF)
 FIELD_HTD14 = "htd14"  # Heater_Cooldown (seconds, RO)
 FIELD_ICD1 = "icd1"  # Chlor_Set_Percentage

@@ -1,10 +1,16 @@
-"""IntelliFlo VSF pump set speeds (`ifd29`-`ifd32` programs, `ifd4`-`ifd7` presets)."""
+"""IntelliFlo VSF pump set speeds.
+
+`ra7` / `htd3` are the speeds IntelliConnect commands over RS485 while Relay 1
+is on or the heater fires; these drive the live pump speed. `ifd29`-`ifd32`
+(programs) and `ifd4`-`ifd7` (presets) are the pump's own stored speeds.
+"""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 from custom_components.pentair_pool.const import (
+    FIELD_HTD3,
     FIELD_IFD4,
     FIELD_IFD5,
     FIELD_IFD6,
@@ -13,6 +19,7 @@ from custom_components.pentair_pool.const import (
     FIELD_IFD30,
     FIELD_IFD31,
     FIELD_IFD32,
+    FIELD_RA7,
     VSF_MAX_RPM,
     VSF_MIN_RPM,
     VSF_RPM_STEP,
@@ -40,6 +47,8 @@ def _desc(key: str) -> NumberEntityDescription:
 
 # (field, description, fallback name)
 VSF_SPEED_NUMBERS: tuple[tuple[str, NumberEntityDescription, str], ...] = (
+    (FIELD_RA7, _desc("relay_1_pump_speed"), "Relay 1 pump speed"),
+    (FIELD_HTD3, _desc("heater_pump_speed"), "Heater pump speed"),
     (FIELD_IFD29, _desc("vsf_program_1_speed"), "VSF program 1 speed"),
     (FIELD_IFD30, _desc("vsf_program_2_speed"), "VSF program 2 speed"),
     (FIELD_IFD31, _desc("vsf_program_3_speed"), "VSF program 3 speed"),
